@@ -1,0 +1,94 @@
+import random
+
+# BOARD AS LIST OF STRINGS
+board = ['1','2','3','4','5','6','7','8','9']
+
+# PRINT BOARD FUNCTION
+def display_board():
+    print("+-------+-------+-------+")
+    print("|       |       |       |")
+    print("|   {}   |   {}   |   {}   |".format(board[0], board[1], board[2]))
+    print("|       |       |       |")
+    print("+-------+-------+-------+")
+    print("|       |       |       |")
+    print("|   {}   |   {}   |   {}   |".format(board[3], board[4], board[5]))
+    print("|       |       |       |")
+    print("+-------+-------+-------+")
+    print("|       |       |       |")
+    print("|   {}   |   {}   |   {}   |".format(board[6], board[7], board[8]))
+    print("|       |       |       |")
+    print("+-------+-------+-------+")
+    print()
+
+# CHECK WINNER FUNCTION
+def victory_for(player):
+    wins = [
+        (0,1,2), (3,4,5), (6,7,8),   # rows
+        (0,3,6), (1,4,7), (2,5,8),   # columns
+        (0,4,8), (2,4,6)             # diagonals
+    ]
+    for x,y,z in wins:
+        if board[x] == board[y] == board[z] == player:
+            return True
+    return False
+
+# USER MOVE
+def user_move():
+    while True:
+        move = input("Enter your move: ")
+        if not move.isdigit():
+            print("Enter a valid number!")
+            continue
+
+        move = int(move)
+
+        if move < 1 or move > 9:
+            print("Number must be 1–9!")
+            continue
+
+        if board[move-1] in ['X','O']:
+            print("Field already occupied!")
+            continue
+
+        board[move-1] = 'O'
+        break
+
+# COMPUTER MOVE
+def computer_move():
+    free = [i for i in range(9) if board[i] not in ['X','O']]
+    move = random.choice(free)
+    board[move] = 'X'
+
+# -------------------
+# GAME START
+# -------------------
+
+# computer first move = center
+board[4] = 'X'
+display_board()
+
+while True:
+
+    # USER MOVE
+    user_move()
+    display_board()
+
+    if victory_for('O'):
+        print("You win!")
+        break
+
+    if all(space in ['X','O'] for space in board):
+        print("Tie!")
+        break
+
+    # COMPUTER MOVE
+    computer_move()
+    display_board()
+
+    if victory_for('X'):
+        print("Computer wins!")
+        break
+
+    if all(space in ['X','O'] for space in board):
+        print("Tie!")
+        break
